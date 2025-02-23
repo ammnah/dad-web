@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع محمد أحمد عسيري الشخصي</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f7;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        header img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+        }
+        .card {
+            background-color: #001f33;
+            color: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            width: 250px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card h3 {
+            margin-top: 0;
+        }
+        .card input, .card button, .card select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+        }
+        .card button {
+            background-color: #006699;
+            color: white;
+            cursor: pointer;
+        }
+        .card button:hover {
+            background-color: #004d66;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .stat {
+            background-color: #003366;
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+            width: 200px;
+        }
+        .stat h4 {
+            margin-top: 0;
+        }
+        .input-wrapper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        footer {
+            background-color: #003366;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        table, th, td {
+            border: 1px solid #003366;
+        }
+        th, td {
+            padding: 10px;
+        }
+        th {
+            background-color: #003366;
+            color: white;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src=" dad.jpeg  " alt="Profile Picture">
+    <h1>موقع محمد أحمد عسيري الشخصي</h1>
+</header>
+
+<div class="container">
+
+    <!-- قسم القهوة -->
+    <div class="card">
+        <h3>القهوة</h3>
+        <div class="input-wrapper">
+            <input type="text" placeholder="اسم البقالة" id="coffeeStore">
+        </div>
+        <div class="input-wrapper">
+            <input type="number" placeholder="كمية القهوة التي تم تسليمها" id="deliveredAmount">
+        </div>
+        <div class="input-wrapper">
+            <select id="paymentStatus">
+                <option value="دفع">هل تم الدفع؟</option>
+                <option value="نعم">نعم</option>
+                <option value="لا">لا</option>
+            </select>
+        </div>
+        <div class="input-wrapper">
+            <input type="number" placeholder="المبلغ المتبقي" id="remainingAmount">
+        </div>
+        <button onclick="addCoffeeStore()">إضافة بقالة جديدة</button>
+    </div>
+
+    <!-- قسم الخدمات -->
+    <div class="card">
+        <h3>الخدمات</h3>
+        <div class="input-wrapper">
+            <input type="text" placeholder="اسم الخدمة" id="serviceName">
+        </div>
+        <div class="input-wrapper">
+            <input type="text" placeholder="اسم الشخص الذي استفاد" id="personName">
+        </div>
+        <div class="input-wrapper">
+            <textarea placeholder="متطلبات الخدمة" id="serviceRequirements"></textarea>
+        </div>
+        <div class="input-wrapper">
+            <textarea placeholder="استعلامات أو تفاصيل إضافية" id="serviceQuery"></textarea>
+        </div>
+        <button onclick="addService()">إضافة خدمة جديدة</button>
+    </div>
+
+    <!-- قسم الإحصائيات -->
+    <div class="card">
+        <h3>الإحصائيات</h3>
+        <div class="stat">
+            <h4>عدد البقالات المضافة</h4>
+            <span id="coffeeStats">0</span>
+            <button onclick="showCoffeeStats()">عرض تفاصيل البقالات</button>
+        </div>
+        <div class="stat">
+            <h4>عدد الخدمات المضافة</h4>
+            <span id="serviceStats">0</span>
+            <button onclick="showServiceStats()">عرض تفاصيل الخدمات</button>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>تم إنشاء هذا الموقع بواسطة/ آمنة محمد</p>
+</footer>
+
+<!-- نافذة الإحصائيات -->
+<div id="statsModal" style="display:none; text-align:center;">
+    <h2>تفاصيل الإحصائيات</h2>
+    <div id="coffeeDetails"></div>
+    <div id="serviceDetails"></div>
+    <button onclick="closeStats()">إغلاق</button>
+</div>
+
+<script>
+    let coffeeStores = [];
+    let services = [];
+
+    // إضافة بقالة جديدة
+    function addCoffeeStore() {`
+        const coffeeStoreName = document.getElementById('coffeeStore').value.trim();
+        const deliveredAmount = document.getElementById('deliveredAmount').value.trim();
+        const paymentStatus = document.getElementById('paymentStatus').value.trim();
+        const remainingAmount = document.getElementById('remainingAmount').value.trim();
+
+        // التحقق من أن الحقول غير فارغة
+        if (coffeeStoreName === "" || deliveredAmount === "" || paymentStatus === "" || remainingAmount === "") {
+            alert('الرجاء إدخال جميع التفاصيل');
+        `} else{`            const confirmation = confirm("هل أنت متأكد من إضافة هذه البيانات؟");
+            if (confirmation) {`
+                coffeeStores.push({ 
+                    name: coffeeStoreName, 
+                    deliveredAmount, 
+                    paymentStatus, 
+                    remainingAmount 
+                });
+                document.getElementById('coffeeStats').textContent = coffeeStores.length;
+                alert`(تم إضافة بقالة: ${coffeeStoreName}\nتم تسليم: ${deliveredAmount} كمية\nحالة الدفع: ${paymentStatus}\nالمبلغ المتبقي: ${remainingAmount});
+                
+                // مسح الحقول بعد إضافة البيانات
+                document.getElementById('coffeeStore').value = '';
+                document.getElementById('deliveredAmount').value = '';
+                document.getElementById('paymentStatus').value = 'دفع';
+                document.getElementById('remainingAmount').value = '';
+            `}
+        `}
+    }
+
+    // إضافة خدمة جديدة
+    function addService() {
+        const serviceName = document.getElementById('serviceName').value;
+        const personName = document.getElementById('personName').value;
+        const serviceRequirements = document.getElementById('serviceRequirements').value;
+        const serviceQuery = document.getElementById('serviceQuery').value;
+
+        // التحقق من أن الحقول غير فارغة
+        if (serviceName !== "" && personName !== "") {
+            services.push({ 
+                serviceName, 
+                personName,
+                serviceRequirements,
+                serviceQuery
+            });
+            document.getElementById('serviceStats').textContent = services.length;
+            alert(تم إضافة خدمة: ${serviceName} لمستفيد: ${personName});
+            
+            // مسح الحقول بعد الإضافة
+            document.getElementById('serviceName').value = '';
+            document.getElementById('personName').value = '';
+            document.getElementById('serviceRequirements').value = '';
+            document.getElementById('serviceQuery').value = '';
+        } else {
+            alert('الرجاء إدخال جميع التفاصيل');
+        }
+    }
+
+    // عرض تفاصيل البقالات في جدول
+    function showCoffeeStats() {
+        let tableHTML = "<table><tr><th>اسم البقالة</th><th>الكمية</th><th>حالة الدفع</th><th>المبلغ المتبقي</th><th>التعديل</th></tr>";
+        
+        coffeeStores.forEach((store, index) => {
+            tableHTML `= `
+                <tr>
+                    <td>${store.name}</td>
+                    <td>${store.deliveredAmount}</td>
+                    <td>${store.paymentStatus}</td>
+                    <td>${store.remainingAmount}</td>
+                    <td><button onclick="editCoffeeStore(${index})">تعديل</button></td>
+                </tr>
+            `;
+        `});
+
+        tableHTML += "</table>";
+        document.getElementById('coffeeDetails').innerHTML = tableHTML;
+        document.getElementById('statsModal').style.display = 'block';
+    }
+
+    // عرض تفاصيل الخدمات في جدول
+    function showServiceStats() {
+        let tableHTML = "<table><tr><th>اسم الخدمة</th><th>المستفيد</th><th>المتطلبات</th><th>التفاصيل الإضافية</th><th>التعديل</th></tr>";
+        
+        services.forEach((service, index) => {
+            tableHTML += 
+                <tr>
+                    <td>${service.serviceName}</td>
+                    <td>${service.personName}</td>
+                    <td>${service.serviceRequirements}</td>
+                    <td>${service.serviceQuery}</td>
+                    <td><button onclick="editService(${index})">تعديل</button></td>
+                </tr>
+            ;
+        });
+
+        tableHTML += "</table>";
+        document.getElementById('serviceDetails').innerHTML = tableHTML;
+        document.getElementById('statsModal').style.display = 'block';
+    }
+
+    // إغلاق نافذة الإحصائيات
+    function closeStats() {
+        document.getElementById('statsModal').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
