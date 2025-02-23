@@ -88,7 +88,7 @@
 
 <header>
     <!-- صورة شخصية صغيرة -->
-    <img src="  dad.jpeg" alt="Profile Picture">
+    <img src="https://via.placeholder.com/100" alt="Profile Picture"> </img>
     <h1>موقع محمد أحمد عسيري الشخصي</h1>
 </header>
 
@@ -118,6 +118,11 @@
             <input type="text" placeholder="أسماء الأشخاص" id="personNames">
             <button onclick="addPeopleToService()">إضافة أشخاص للخدمة</button>
         </div>
+        <!-- إضافة المتطلبات للخدمة -->
+        <div class="input-wrapper">
+            <textarea id="serviceRequirements" placeholder="أدخل المتطلبات هنا..."></textarea>
+            <button onclick="addRequirements()">إضافة المتطلبات</button>
+        </div>
     </div>
 
     <!-- قسم الإحصائيات -->
@@ -142,6 +147,7 @@
 <script>
     let coffeeStores = 0;
     let services = 0;
+    let requirements = [];
 
     // إضافة بقالة جديدة
     function addCoffeeStore() {
@@ -188,6 +194,18 @@
             document.getElementById('personNames').value = ''; // مسح الحقل بعد الإضافة
         } else {
             alert('الرجاء إدخال أسماء الأشخاص');
+        }
+    }
+
+    // إضافة المتطلبات للخدمة
+    function addRequirements() {
+        const requirementsText = document.getElementById('serviceRequirements').value;
+        if (requirementsText) {
+            requirements.push(requirementsText);
+            alert(تم إضافة المتطلبات: ${requirementsText});
+            document.getElementById('serviceRequirements').value = ''; // مسح الحقل بعد الإضافة
+        } else {
+            alert('الرجاء إدخال المتطلبات');
         }
     }
 </script>
